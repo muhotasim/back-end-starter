@@ -8,8 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "local:dev": "SET NODE_ENV=local && nest start --watch",
-    "local:debug": "SET NODE_ENV=local && nest start --debug --watch",
+    "local:dev": "SET NODE_ENV=local&& nest start --watch",
+    "local:debug": "SET NODE_ENV=local&& nest start --debug --watch",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",

@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-config({ path: resolve(__dirname, '..', (process.env.NODE_ENV == 'local' || process.env.NODE_ENV == 'development') ? '.development.env' : '.production.env') })
+config({ path: resolve(__dirname, '..', (process.env.NODE_ENV=='local' || process.env.NODE_ENV == 'development') ? '.development.env' : '.production.env') })
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as compression from 'compression';
@@ -22,13 +22,15 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setVersion('1.0')
+    .setTitle('Backend Started Doc')
+    .setContact('Muhotasim Fuad', '', 'muhotasimF@gmail.com')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
 
   app.useGlobalPipes(new ValidationPipe());
-  console.info(`server is running at http://localhost:${process.env.PORT}`);
+  console.info(`server is running at ${process.env.APP_URL}:${process.env.PORT}`);
   await app.listen(process.env.PORT);
 }
 bootstrap();
