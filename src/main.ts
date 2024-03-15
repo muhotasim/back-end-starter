@@ -1,10 +1,13 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
-config({ path: resolve(__dirname, '..', process.env.NODE_ENV == 'local' ? '.development.env' : '.production.env') })
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+config({ path: resolve(__dirname, '..', (process.env.NODE_ENV == 'local' || process.env.NODE_ENV == 'development') ? '.development.env' : '.production.env') })
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as compression from 'compression';
+import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,{
+  const app = await NestFactory.create(AppModule, {
     bodyParser: true,
     rawBody: true,
   });
@@ -15,6 +18,16 @@ async function bootstrap() {
     allowedHeaders: '*',
     preflightContinue: false
   });
+  app.use(compression());
+
+  const config = new DocumentBuilder()
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
+
+  app.useGlobalPipes(new ValidationPipe());
   console.info(`server is running at http://localhost:${process.env.PORT}`);
   await app.listen(process.env.PORT);
 }
