@@ -5,13 +5,9 @@ import { ApiBearerAuth, ApiHeader, ApiTags } from "@nestjs/swagger";
 import { AuthorizationGuard } from "src/guards/authorization.guard";
 import { PermissionGuard } from "src/guards/permission.guard";
 @ApiTags('Permission')
-@ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer token',
-    required: true,
-})
 @UseGuards(AuthorizationGuard)
 @Controller('permission')
+@ApiBearerAuth()
 export class PermissionController {
     constructor(private readonly _permissionService: PermissionService) { }
     

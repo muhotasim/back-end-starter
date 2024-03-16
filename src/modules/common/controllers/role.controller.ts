@@ -1,18 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { RoleService } from "../services/role.service";
 import { CreateRoleDTO, UpdateRoleDTO } from "../dto/role.dto";
-import { ApiHeader, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiHeader, ApiTags } from "@nestjs/swagger";
 import { AuthorizationGuard } from "src/guards/authorization.guard";
 import { PermissionGuard } from "src/guards/permission.guard";
 
 @ApiTags('Roles')
-@ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer token',
-    required: true,
-})
 @UseGuards(AuthorizationGuard)
 @Controller('roles')
+@ApiBearerAuth()
 export class RoleController {
     constructor(private readonly _roleService: RoleService){}
     @Get()

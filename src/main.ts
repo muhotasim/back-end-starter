@@ -21,6 +21,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setVersion('1.0')
     .setTitle('Backend Started Doc')
+    .addBearerAuth({type: 'http', name: 'Bearer'})
     .setContact('Muhotasim Fuad', '', 'muhotasimF@gmail.com')
     .build();
   const document = SwaggerModule.createDocument(app, config);

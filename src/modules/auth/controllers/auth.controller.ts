@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Patch, Post, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
 import { ForgotPasswordDTO, LoginDTO, ResetPasswordDTO } from "../dto/auth.dto";
-import { ApiHeader, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiHeader, ApiTags } from "@nestjs/swagger";
 import { UserService } from "src/modules/common/services/user.service";
 import { User, checkPassword, encodePayload } from "src/utils/common.functions";
 import { TokenService } from "src/modules/common/services/token.service";
@@ -40,23 +40,16 @@ export class AuthController {
 
         throw new UnauthorizedException()
     }
-    @ApiHeader({
-        name: 'Authorization',
-        description: 'Bearer token',
-        required: true,
-    })
+
     @Post('refresh-token')
+    @ApiBearerAuth()
     refreshToken(@Body('access_token') access_token:string) {
 
      }
 
 
-    @ApiHeader({
-        name: 'Authorization',
-        description: 'Bearer token',
-        required: true,
-    })
     @Post('logout')
+    @ApiBearerAuth()
     logout() { }
 
     @Post('forgot-password')
@@ -66,13 +59,9 @@ export class AuthController {
     resetPassword(@Body() body: ResetPasswordDTO) { }
 
 
-    @ApiHeader({
-        name: 'Authorization',
-        description: 'Bearer token',
-        required: true,
-    })
-    @Get('user')
     @UseGuards(AuthorizationGuard)
+    @Get('user')
+    @ApiBearerAuth()
     user(@User() user) { 
         if(user){
             delete user.password;
@@ -83,11 +72,9 @@ export class AuthController {
         return user;
     }
 
-    @ApiHeader({
-        name: 'Authorization',
-        description: 'Bearer token',
-        required: true,
-    })
+    
+    @UseGuards(AuthorizationGuard)
     @Patch('update-password')
+    @ApiBearerAuth()
     changePassword() { }
 }
