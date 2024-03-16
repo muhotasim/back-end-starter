@@ -22,10 +22,6 @@ export class CreateUserDTO {
   @IsBoolean()
   is_active: boolean;
 
-  // @ApiProperty()
-  // @IsNotEmpty()
-  // @IsArray()
-  // roles: number[]
 }
 
 export class UpdateUserDTO extends PartialType(CreateUserDTO){
