@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { PermissionService } from "../services/permissions.service";
 import { CreatePermissionDTO, UpdatePermissionDTO } from "../dto/permission.dto";
-import { ApiBearerAuth, ApiHeader, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { AuthorizationGuard } from "src/guards/authorization.guard";
 import { PermissionGuard } from "src/guards/permission.guard";
 @ApiTags('Permission')
