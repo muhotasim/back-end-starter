@@ -69,7 +69,6 @@ export class AuthController {
         return await this._tokenService.findById(savedToken.id);
     }
 
-
     @Post('logout')
     @ApiBearerAuth()
     async logout(@Body('access_token') access_token: string, @User() user) {
@@ -120,7 +119,6 @@ export class AuthController {
         }
     }
 
-
     @UseGuards(AuthorizationGuard)
     @Get('user')
     @ApiBearerAuth()
@@ -132,7 +130,6 @@ export class AuthController {
         }
         return user;
     }
-
 
     @UseGuards(AuthorizationGuard)
     @Patch('update-password')

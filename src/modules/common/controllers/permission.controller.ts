@@ -24,8 +24,6 @@ export class PermissionController {
         return await this._permissionService.findAll();
     }
 
-
-
     @Post()
     @Get()
     @UseGuards(new PermissionGuard(['can-create-permission']))
