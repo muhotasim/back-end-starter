@@ -20,14 +20,21 @@ export class ForgotPasswordDTO{
 export class ResetPasswordDTO{
   @ApiProperty()
   @IsNotEmpty()
-  otp: string;
+  token: string;
 
   @ApiProperty()
   @IsNotEmpty()
   new_password: string;
 
+}
+
+export class ChangePasswordDTO{
   @ApiProperty()
   @IsNotEmpty()
-  confirmed_password: string;
+  current_password: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  new_password: string;
 
 }

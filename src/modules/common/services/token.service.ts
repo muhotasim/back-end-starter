@@ -2,7 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Permission } from "src/models/permissions.model";
 import { Token } from "src/models/token.model";
-import { FindManyOptions, FindOptionsWhere, Like, Repository } from "typeorm";
+import { User } from "src/models/user.model";
+import { FindManyOptions, FindOptionsWhere, LessThan, Like, Repository } from "typeorm";
 
 @Injectable()
 export class TokenService {
@@ -14,11 +15,28 @@ export class TokenService {
         return await this._m_Token.findOne({ where: { id: id } });
     }
 
+    activeUserTokens(user:User): Promise<Token[]>{
+        [
+            {ac_token_expires_at: LessThan(new Date().getTime())},
+            {rf_token_expires_at: LessThan(new Date().getTime())}
+        ]
+        return this._m_Token.find({where: { ac_token_expires_at: LessThan(new Date().getTime()), rf_token_expires_at: LessThan(new Date().getTime()), user: user }})
+    }
+
     async create(token: Partial<Token>): Promise<Token> {
         const newToken = this._m_Token.create(token);
         return await this._m_Token.save(newToken);
     }
 
+    async update(id: number, updateTokenDto: Partial<Token>): Promise<Token | false> {
+        const token = await this._m_Token.findOne({ where: { id: id } });
+        if (!token) {
+            return false;
+        }
+
+        Object.assign(token, updateTokenDto);
+        return await this._m_Token.save(token);
+    }
 
     async destroy(id: number) {
         const token: Token = await this._m_Token.findOne({ where: { id: id } });

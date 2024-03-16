@@ -4,11 +4,11 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 const saltOrRounds = 10;
 
-export const hashPassword = (password:string)=>{
-    return bcrypt.hash(password, saltOrRounds);
+export const hashPassword =async (password:string)=>{
+    return await bcrypt.hash(password, saltOrRounds);
 }
-export const checkPassword = (password:string, hashedString: string)=>{
-    return bcrypt.compare(password, hashedString)
+export const checkPassword =async (password:string, hashedString: string)=>{
+    return await bcrypt.compare(password, hashedString)
 }
 export const  encodePayload=(payload: any): string =>{
     const encodedPayload = Buffer.from(JSON.stringify(payload)).toString('base64');

@@ -17,9 +17,14 @@ export class User {
   @Column()
   password: string;
 
-  
   @Column()
   is_superadmin: boolean
+
+  @Column()
+  password_reset_token: string
+
+  @Column()
+  password_token_expiry_at: Date
   
   @Column()
   is_active: boolean
