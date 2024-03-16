@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { Role } from "./role.model";
 @Entity()
 @Unique(['name', 'permission_key'])
