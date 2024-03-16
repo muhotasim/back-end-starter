@@ -4,7 +4,7 @@ import { User } from "./user.model";
 
 @Entity()
 export class Token{
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({type: 'bigint'})
     id: number;
 
     @Column({type:'text'})
