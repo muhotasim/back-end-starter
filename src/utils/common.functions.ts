@@ -4,13 +4,13 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 const saltOrRounds = 10;
 
-export const hashPassword =async (password:string)=>{
+export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, saltOrRounds);
 }
-export const checkPassword =async (password:string, hashedString: string)=>{
+export const checkPassword = async (password: string, hashedString: string) => {
     return await bcrypt.compare(password, hashedString)
 }
-export const  encodePayload=(payload: any): string =>{
+export const encodePayload = (payload: any): string => {
     const encodedPayload = Buffer.from(JSON.stringify(payload)).toString('base64');
     const hmac = crypto.createHmac('sha256', process.env.JWT_ACCESS_TOKEN_SECRET);
     hmac.update(encodedPayload);
@@ -18,7 +18,7 @@ export const  encodePayload=(payload: any): string =>{
     return `${encodedPayload}.${signature}`;
 }
 
-export const  decodePayload=(encodedPayloadWithSignature: string): any =>{
+export const decodePayload = (encodedPayloadWithSignature: string): any => {
     const [encodedPayload, signature] = encodedPayloadWithSignature.split('.');
     const hmac = crypto.createHmac('sha256', process.env.JWT_ACCESS_TOKEN_SECRET);
     hmac.update(encodedPayload);
@@ -30,7 +30,7 @@ export const  decodePayload=(encodedPayloadWithSignature: string): any =>{
 }
 export const User = createParamDecorator(
     (data: unknown, context: ExecutionContext) => {
-      const request = context.switchToHttp().getRequest();
-      return request.user; 
+        const request = context.switchToHttp().getRequest();
+        return request.user;
     },
-  );
+);
