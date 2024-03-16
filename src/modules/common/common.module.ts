@@ -17,9 +17,13 @@ import { JwtModule } from "@nestjs/jwt";
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailService } from "./services/mail.service";
+import { QueueService } from "./services/queue.service";
+import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
+
 
 @Module({
     imports: [
+        EventEmitterModule.forRoot(),
         MailerModule.forRoot({
             transport: {
                 host: process.env.MAIL_HOST,
@@ -47,7 +51,7 @@ import { MailService } from "./services/mail.service";
         JwtModule
     ],
     controllers: [ UserController, RoleController, PermissionController ],
-    providers: [UserService, RoleService, PermissionService, TokenService, ScheduleCleanUpService, MailService],
-    exports: [UserService, RoleService, PermissionService, TokenService, MailService]
+    providers: [UserService, RoleService, PermissionService, TokenService, ScheduleCleanUpService, MailService, QueueService],
+    exports: [UserService, RoleService, PermissionService, TokenService, MailService, QueueService]
 })
 export class CommonModule{}

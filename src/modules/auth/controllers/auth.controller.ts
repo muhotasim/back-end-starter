@@ -7,6 +7,8 @@ import { User, checkPassword, decodePayload, encodePayload, hashPassword } from 
 import { TokenService } from "src/modules/common/services/token.service";
 import { AuthorizationGuard } from "src/guards/authorization.guard";
 import { MailService } from "src/modules/common/services/mail.service";
+import { QueueService } from "src/modules/common/services/queue.service";
+import { JobTypes } from "src/utils/custome.datatypes";
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -14,7 +16,9 @@ export class AuthController {
         private readonly _userService: UserService,
         private readonly _tokenService: TokenService,
         private readonly _jwtService: JwtService,
-        private readonly _mailService: MailService) { }
+        private readonly _mailService: MailService,
+        private readonly _queueService: QueueService
+        ) { }
     
     @Post('token')
     async login(@Body() body: LoginDTO) {
@@ -88,7 +92,8 @@ export class AuthController {
         let expiredTime = new Date(new Date().getTime()+Number(process.env.PASS_RESET_TOKEN_EXPIRY));
         const passwordResetToken = await this._jwtService.signAsync(payload, { secret: process.env.JWT_ACCESS_TOKEN_SECRET, expiresIn: Number(process.env.PASS_RESET_TOKEN_EXPIRY) });
         await this._userService.update(user.id, {password_reset_token: passwordResetToken, password_token_expiry_at: expiredTime})
-        await this._mailService.sendMail({
+        
+        const mailData = {
             to: user.email,
             from: process.env.MAIL_HOST,
             subject: "Reset Your Password: Action Required",
@@ -97,7 +102,9 @@ export class AuthController {
                 link: process.env.APP_URL+'/reset-password/'+passwordResetToken,
                 name: user.name
             }
-        })
+        }
+        this._queueService.addJob(JobTypes.mail, mailData);
+        // await this._mailService.sendMail(mailData)
         return true;
 
     }
