@@ -13,9 +13,10 @@ import { Token } from "src/models/token.model";
 import { TokenService } from "./services/token.service";
 import { ScheduleCleanUpService } from "./services/schedule-cleanup.schedule";
 import { ScheduleModule } from "@nestjs/schedule";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Role, Permission, Token]), ScheduleModule.forRoot()],
+    imports: [TypeOrmModule.forFeature([User, Role, Permission, Token]), ScheduleModule.forRoot(), JwtModule],
     controllers: [ UserController, RoleController, PermissionController ],
     providers: [UserService, RoleService, PermissionService, TokenService, ScheduleCleanUpService],
     exports: [UserService, RoleService, PermissionService, TokenService]

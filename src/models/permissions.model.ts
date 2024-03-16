@@ -1,8 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { Role } from "./role.model";
-
 @Entity()
-@Unique(['name'])
+@Unique(['name', 'permission_key'])
 export class Permission{
     @PrimaryGeneratedColumn()
     id: number;

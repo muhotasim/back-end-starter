@@ -4,6 +4,10 @@ export class CreatePermissionDTO {
   @ApiProperty()
   @IsNotEmpty()
   name: string;
+  
+  @ApiProperty()
+  @IsNotEmpty()
+  permission_key: string;
 
   @ApiProperty()
   @IsNotEmpty()

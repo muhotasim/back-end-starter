@@ -4,7 +4,6 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 config({ path: resolve(__dirname, '..', (process.env.NODE_ENV=='local' || process.env.NODE_ENV == 'development') ? '.development.env' : '.production.env') })
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as compression from 'compression';
 import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -18,7 +17,6 @@ async function bootstrap() {
     allowedHeaders: '*',
     preflightContinue: false
   });
-  app.use(compression());
 
   const config = new DocumentBuilder()
     .setVersion('1.0')
