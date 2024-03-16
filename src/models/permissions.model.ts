@@ -11,6 +11,9 @@ export class Permission{
     name: string
 
     @Column()
+    permission_key: string
+
+    @Column()
     is_active: boolean    
     @ManyToMany(() => Role, role => role.permissions)
     @JoinTable({

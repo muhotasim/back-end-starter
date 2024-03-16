@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { UserService } from "../services/user.service";
 import { CreateUserDTO, UpdateUserDTO } from "../dto/users.dto";
 import { ApiHeader, ApiTags } from "@nestjs/swagger";
 import { hashPassword } from "src/utils/common.functions";
+import { AuthorizationGuard } from "src/guards/authorization.guard";
 
 @ApiTags('Users')
 @ApiHeader({
@@ -10,6 +11,7 @@ import { hashPassword } from "src/utils/common.functions";
     description: 'Bearer token',
     required: true,
 })
+@UseGuards(AuthorizationGuard)
 @Controller('users')
 export class UserController {
     constructor(private readonly _userService: UserService){}

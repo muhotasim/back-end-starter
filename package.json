@@ -8,6 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "seed": "npx ts-node ./src/commands/seed.command.ts",
     "local:dev": "SET NODE_ENV=local&& nest start --watch",
     "local:debug": "SET NODE_ENV=local&& nest start --debug --watch",
     "start": "nest start",
@@ -38,6 +39,7 @@
     "compression": "^1.7.4",
     "dotenv": "^16.4.5",
     "mysql2": "^3.9.2",
+    "nestjs-command": "^3.1.4",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20"
