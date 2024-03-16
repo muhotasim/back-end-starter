@@ -1,13 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Permission } from "src/models/permissions.model";
 import { Token } from "src/models/token.model";
 import { User } from "src/models/user.model";
-import { FindManyOptions, FindOptionsWhere, LessThan, Like, Repository } from "typeorm";
+import { LessThan, Repository } from "typeorm";
 
 @Injectable()
 export class TokenService {
-    constructor(@InjectRepository(Token) private readonly _m_Token: Repository<Token>){
+    constructor(@InjectRepository(Token) private readonly _m_Token: Repository<Token>) {
 
     }
 
@@ -15,12 +14,12 @@ export class TokenService {
         return await this._m_Token.findOne({ where: { id: id } });
     }
 
-    activeUserTokens(user:User): Promise<Token[]>{
+    activeUserTokens(user: User): Promise<Token[]> {
         [
-            {ac_token_expires_at: LessThan(new Date().getTime())},
-            {rf_token_expires_at: LessThan(new Date().getTime())}
+            { ac_token_expires_at: LessThan(new Date().getTime()) },
+            { rf_token_expires_at: LessThan(new Date().getTime()) }
         ]
-        return this._m_Token.find({where: { ac_token_expires_at: LessThan(new Date().getTime()), rf_token_expires_at: LessThan(new Date().getTime()), user: user }})
+        return this._m_Token.find({ where: { ac_token_expires_at: LessThan(new Date().getTime()), rf_token_expires_at: LessThan(new Date().getTime()), user: user } })
     }
 
     async create(token: Partial<Token>): Promise<Token> {
@@ -43,11 +42,11 @@ export class TokenService {
         return await this._m_Token.delete(token)
     }
 
-    async clearExpiredTokens(){
+    async clearExpiredTokens() {
         await this._m_Token
-        .createQueryBuilder('tokens')
-        .delete()
-        .from(Token)
-        .where('ac_token_expires_at < :currentDate AND rf_token_expires_at < :currentDate', { currentDate: new Date().getTime() }).execute()
+            .createQueryBuilder('tokens')
+            .delete()
+            .from(Token)
+            .where('ac_token_expires_at < :currentDate AND rf_token_expires_at < :currentDate', { currentDate: new Date().getTime() }).execute()
     }
 }

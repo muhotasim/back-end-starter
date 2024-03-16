@@ -5,8 +5,8 @@ import { FindManyOptions, Like, Repository } from "typeorm";
 
 @Injectable()
 export class PermissionService {
-    constructor(@InjectRepository(Permission) private readonly _m_Permission: Repository<Permission>){}
-    async findAndCount(page: number = 1, perPage: number = 10, filterParams: { search?: string, is_active?: boolean }): Promise<{data: Permission[], total:number}> {
+    constructor(@InjectRepository(Permission) private readonly _m_Permission: Repository<Permission>) { }
+    async findAndCount(page: number = 1, perPage: number = 10, filterParams: { search?: string, is_active?: boolean }): Promise<{ data: Permission[], total: number }> {
         const options: FindManyOptions<Permission> = {
             take: perPage,
             skip: perPage * (page - 1),
@@ -22,11 +22,11 @@ export class PermissionService {
             }
         }
         const [data, total] = await this._m_Permission
-        .findAndCount(options);
-        return {data, total};
+            .findAndCount(options);
+        return { data, total };
     }
 
-    async findAll():Promise<Permission[]>{
+    async findAll(): Promise<Permission[]> {
         return await this._m_Permission.find();
     }
 
@@ -49,7 +49,7 @@ export class PermissionService {
         return await this._m_Permission.save(permission);
     }
 
-    
+
     async destroy(id: number) {
         const permission: Permission = await this._m_Permission.findOne({ where: { id: id } });
         return await this._m_Permission.delete(permission)

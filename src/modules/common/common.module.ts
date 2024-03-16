@@ -18,7 +18,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailService } from "./services/mail.service";
 import { QueueService } from "./services/queue.service";
-import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 
 
 @Module({
@@ -28,10 +28,10 @@ import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
             transport: {
                 host: process.env.MAIL_HOST,
                 port: Number(process.env.MAIL_PORT),
-                secure: process.env.MAIL_SECURE=='TRUE'?true:false,
+                secure: process.env.MAIL_SECURE == 'TRUE' ? true : false,
                 auth: {
-                  user: process.env.MAIL_USER,
-                  pass: process.env.MAIL_PASS,
+                    user: process.env.MAIL_USER,
+                    pass: process.env.MAIL_PASS,
                 },
                 authMethod: process.env.MAIL_AUTH_METHOD
             },
@@ -39,9 +39,9 @@ import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
                 from: '"nest-modules" <modules@nestjs.com>',
             },
             template: {
-                    dir: __dirname + '../../../../templates/mail',
-                    adapter: new HandlebarsAdapter(),
-                    options: {
+                dir: __dirname + '../../../../templates/mail',
+                adapter: new HandlebarsAdapter(),
+                options: {
                     strict: true,
                 },
             },
@@ -50,8 +50,8 @@ import { EventEmitter2, EventEmitterModule } from "@nestjs/event-emitter";
         ScheduleModule.forRoot(),
         JwtModule
     ],
-    controllers: [ UserController, RoleController, PermissionController ],
+    controllers: [UserController, RoleController, PermissionController],
     providers: [UserService, RoleService, PermissionService, TokenService, ScheduleCleanUpService, MailService, QueueService],
     exports: [UserService, RoleService, PermissionService, TokenService, MailService, QueueService]
 })
-export class CommonModule{}
+export class CommonModule { }

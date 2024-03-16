@@ -16,7 +16,7 @@ export class QueueService implements OnModuleInit {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly mailService: MailService,
-  ) {}
+  ) { }
 
   onModuleInit() {
     this.processQueue();

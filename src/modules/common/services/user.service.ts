@@ -1,15 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Role } from "src/models/role.model";
 import { User } from "src/models/user.model";
-import { hashPassword } from "src/utils/common.functions";
 import { FindManyOptions, Like, Repository } from "typeorm";
 
 @Injectable()
 export class UserService {
     constructor(@InjectRepository(User) private readonly _m_User: Repository<User>) { }
 
-    async findAndCount(page: number = 1, perPage: number = 10, filterParams: { search?: string, is_active?: boolean }): Promise<{data: User[], total:number}> {
+    async findAndCount(page: number = 1, perPage: number = 10, filterParams: { search?: string, is_active?: boolean }): Promise<{ data: User[], total: number }> {
         const options: FindManyOptions<User> = {
             take: perPage,
             skip: perPage * (page - 1),
@@ -26,10 +24,10 @@ export class UserService {
             }
         }
         const [data, total] = await this._m_User.findAndCount(options);
-        return {data, total};
+        return { data, total };
     }
 
-    async findAll():Promise<User[]>{
+    async findAll(): Promise<User[]> {
         return await this._m_User.find();
     }
 
@@ -40,20 +38,20 @@ export class UserService {
     async user(id: number) {
 
         const userInfo = await this._m_User
-        .createQueryBuilder('user')
-        .where('user.id = :id', { id })
-        .leftJoinAndSelect('user.roles', 'roles')
-        .leftJoinAndSelect('roles.permissions', 'permissions')
-        .leftJoinAndSelect('user.tokens', 'tokens', 'tokens.ac_token_expires_at > :currentDate OR tokens.rf_token_expires_at > :currentDate', { currentDate: new Date().getTime() })
-        .getOne();
+            .createQueryBuilder('user')
+            .where('user.id = :id', { id })
+            .leftJoinAndSelect('user.roles', 'roles')
+            .leftJoinAndSelect('roles.permissions', 'permissions')
+            .leftJoinAndSelect('user.tokens', 'tokens', 'tokens.ac_token_expires_at > :currentDate OR tokens.rf_token_expires_at > :currentDate', { currentDate: new Date().getTime() })
+            .getOne();
         let permissions = [];
 
-        for(let role of userInfo.roles){
-            role.permissions.forEach((permission)=>{
+        for (let role of userInfo.roles) {
+            role.permissions.forEach((permission) => {
                 permissions.push(permission)
             })
         }
-        let userObj = {...userInfo, permissions: permissions};
+        let userObj = { ...userInfo, permissions: permissions };
         delete userObj.roles
 
         return userObj;
@@ -63,11 +61,11 @@ export class UserService {
         return await this._m_User.findOne({ where: { email: email } });
     }
 
-    async findRolesByUserId (id: number){
+    async findRolesByUserId(id: number) {
         return await this._m_User.findOne({ where: { id: id }, relations: ['roles'] });
     }
 
-    async findPermissionByUserId (id: number){
+    async findPermissionByUserId(id: number) {
         return await this._m_User.findOne({ where: { id: id }, relations: ['roles', 'roles.permissions'] });
     }
 

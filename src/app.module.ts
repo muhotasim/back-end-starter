@@ -4,7 +4,6 @@ import { getDatabaseConfig } from './config/database';
 import { AuthModule } from './modules/auth/auth.module';
 import { CommonModule } from './modules/common/common.module';
 
-
 @Module({
   imports: [
     TypeOrmModule.forRoot(getDatabaseConfig()),
@@ -13,4 +12,6 @@ import { CommonModule } from './modules/common/common.module';
   ],
   providers: []
 })
-export class AppModule {}
+
+export class AppModule { }
+

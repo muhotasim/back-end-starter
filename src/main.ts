@@ -33,7 +33,10 @@ async function bootstrap() {
 
 
   app.useGlobalPipes(new ValidationPipe());
-  console.info(`server is running at ${process.env.APP_URL}:${process.env.PORT}`);
-  await app.listen(process.env.PORT);
+  await app.listen(process.env.PORT,()=>{
+    console.info(`🌏︎ server is up and running.
+    \n backend \t=>\t ${process.env.API_URL}
+    \n frontend\t=>\t ${process.env.APP_URL} \n`);
+  });
 }
 bootstrap();

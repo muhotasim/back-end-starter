@@ -10,10 +10,10 @@ export class CreateRoleDTO {
   is_active: boolean;
 }
 
-export class UpdateRoleDTO extends PartialType(CreateRoleDTO){
-    @ApiProperty({ required: false })
-    name: string;
-  
-    @ApiProperty({ required: false })
-    is_active: boolean;
+export class UpdateRoleDTO extends PartialType(CreateRoleDTO) {
+  @ApiProperty({ required: false })
+  name: string;
+
+  @ApiProperty({ required: false })
+  is_active: boolean;
 }

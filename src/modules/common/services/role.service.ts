@@ -8,7 +8,7 @@ import { FindManyOptions, In, Like, Repository } from "typeorm";
 export class RoleService {
     constructor(@InjectRepository(Role) private readonly _m_Role: Repository<Role>,
         @InjectRepository(Permission) private readonly _m_Permission: Repository<Permission>) { }
-    async findAndCount(page: number = 1, perPage: number = 10, filterParams: { search?: string, is_active?: boolean }): Promise<{data: Role[], total: number}> {
+    async findAndCount(page: number = 1, perPage: number = 10, filterParams: { search?: string, is_active?: boolean }): Promise<{ data: Role[], total: number }> {
         const options: FindManyOptions<Role> = {
             take: perPage,
             skip: perPage * (page - 1),
@@ -24,10 +24,10 @@ export class RoleService {
             }
         }
         const [data, total] = await this._m_Role.findAndCount(options);
-        return {data, total};
+        return { data, total };
     }
 
-    async findAll():Promise<Role[]>{
+    async findAll(): Promise<Role[]> {
         return await this._m_Role.find();
     }
 

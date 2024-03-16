@@ -9,7 +9,7 @@ import { Seeder } from 'nestjs-seeder';
 import slugify from 'slugify';
 
 @Injectable()
-export class SeederService implements Seeder{
+export class SeederService implements Seeder {
   constructor(
     @InjectRepository(User)
     private readonly _m_User: Repository<User>,
@@ -36,30 +36,30 @@ export class SeederService implements Seeder{
 
   private async seedPermissions(): Promise<void> {
     let permission = [
-      { name: 'Can Get Permission With Count',permission_key:'', is_active: true },
-      { name: 'Can Get All Permissions',permission_key:'', is_active: true },
-      { name: 'Can Create Permission',permission_key:'', is_active: true },
-      { name: 'Can Update Permission',permission_key:'', is_active: true },
-      { name: 'Can Get Single Permission',permission_key:'', is_active: true },
-      { name: 'Can Delete Permission',permission_key:'', is_active: true },
-      
-      { name: 'Can Get Roles With Count',permission_key:'', is_active: true },
-      { name: 'Can Get All Roles',permission_key:'', is_active: true },
-      { name: 'Can Create Role',permission_key:'', is_active: true },
-      { name: 'Can Update Role',permission_key:'', is_active: true },
-      { name: 'Can Get Single Role',permission_key:'', is_active: true },
-      { name: 'Can Delete Role',permission_key:'', is_active: true },
-      
-      { name: 'Can Get Users With Count',permission_key:'', is_active: true },
-      { name: 'Can Create User',permission_key:'', is_active: true },
-      { name: 'Can Update User',permission_key:'', is_active: true },
-      { name: 'Can Get Single User',permission_key:'', is_active: true },
-      { name: 'Can Delete User',permission_key:'', is_active: true },
-    ].map(d=>{
-      d.permission_key = slugify(d.name.toLowerCase(),{ lower: true, trim: true })
+      { name: 'Can Get Permission With Count', permission_key: '', is_active: true },
+      { name: 'Can Get All Permissions', permission_key: '', is_active: true },
+      { name: 'Can Create Permission', permission_key: '', is_active: true },
+      { name: 'Can Update Permission', permission_key: '', is_active: true },
+      { name: 'Can Get Single Permission', permission_key: '', is_active: true },
+      { name: 'Can Delete Permission', permission_key: '', is_active: true },
+
+      { name: 'Can Get Roles With Count', permission_key: '', is_active: true },
+      { name: 'Can Get All Roles', permission_key: '', is_active: true },
+      { name: 'Can Create Role', permission_key: '', is_active: true },
+      { name: 'Can Update Role', permission_key: '', is_active: true },
+      { name: 'Can Get Single Role', permission_key: '', is_active: true },
+      { name: 'Can Delete Role', permission_key: '', is_active: true },
+
+      { name: 'Can Get Users With Count', permission_key: '', is_active: true },
+      { name: 'Can Create User', permission_key: '', is_active: true },
+      { name: 'Can Update User', permission_key: '', is_active: true },
+      { name: 'Can Get Single User', permission_key: '', is_active: true },
+      { name: 'Can Delete User', permission_key: '', is_active: true },
+    ].map(d => {
+      d.permission_key = slugify(d.name.toLowerCase(), { lower: true, trim: true })
       return d;
     })
-     await this._m_Permission.save(permission);
+    await this._m_Permission.save(permission);
 
   }
 
@@ -76,7 +76,7 @@ export class SeederService implements Seeder{
       { name: 'superadmin', email: 'admin@gmail.com', is_active: true, is_superadmin: true, password: await hashPassword('123456'), roles: roles }
     ]
     await this._m_User.save(users);
-    
+
   }
 
 }
