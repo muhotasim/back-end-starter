@@ -9,11 +9,15 @@ import { RoleController } from "./controllers/role.controller";
 import { PermissionService } from "./services/permissions.service";
 import { PermissionController } from "./controllers/permission.controller";
 import { Permission } from "src/models/permissions.model";
+import { Token } from "src/models/token.model";
+import { TokenService } from "./services/token.service";
+import { ScheduleCleanUpService } from "./services/schedule-cleanup.schedule";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Role, Permission])],
+    imports: [TypeOrmModule.forFeature([User, Role, Permission, Token]), ScheduleModule.forRoot()],
     controllers: [ UserController, RoleController, PermissionController ],
-    providers: [UserService, RoleService, PermissionService],
-    exports: [UserService, RoleService, PermissionService]
+    providers: [UserService, RoleService, PermissionService, TokenService, ScheduleCleanUpService],
+    exports: [UserService, RoleService, PermissionService, TokenService]
 })
 export class CommonModule{}

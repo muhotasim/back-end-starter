@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestj
 import { UserService } from "../services/user.service";
 import { CreateUserDTO, UpdateUserDTO } from "../dto/users.dto";
 import { ApiHeader, ApiTags } from "@nestjs/swagger";
+import { hashPassword } from "src/utils/common.functions";
 
 @ApiTags('Users')
 @ApiHeader({
@@ -19,11 +20,16 @@ export class UserController {
     
     @Post()
     async create(@Body() createUserDTO:CreateUserDTO) { 
+        createUserDTO.password = await hashPassword(createUserDTO.password);
         return await this._userService.create(createUserDTO)
     }
     
     @Patch('/:id')
     async update(@Param('id') id: number, @Body() updateUserDTO: UpdateUserDTO) {
+        const user = await this._userService.findById(id);
+        if(user&&user.password!=updateUserDTO.password){
+            updateUserDTO.password =  await hashPassword(updateUserDTO.password)
+        }
         return await this._userService.update(id, updateUserDTO);
      }
     

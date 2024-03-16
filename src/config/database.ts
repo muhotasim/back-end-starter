@@ -1,8 +1,8 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import { Token } from "src/models/token.model";
+import { Menu } from "src/models/menu.model";
 import { Permission } from "src/models/permissions.model";
-import { RolePermission } from "src/models/role-permission.model";
 import { Role } from "src/models/role.model";
-import { UserRole } from "src/models/user-role.model";
 import { User } from "src/models/user.model";
 
 export const getDatabaseConfig = ():TypeOrmModuleOptions =>{
@@ -13,7 +13,7 @@ export const getDatabaseConfig = ():TypeOrmModuleOptions =>{
         username: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: process.env.DB_DATABASE,
-        entities: [ User, Role, UserRole, Permission, RolePermission ],
+        entities: [ User, Role,  Permission, Token, Menu ],
         synchronize: true,
     }
 }

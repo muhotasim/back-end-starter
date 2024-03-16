@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Role } from "src/models/role.model";
 import { User } from "src/models/user.model";
 import { hashPassword } from "src/utils/common.functions";
 import { FindManyOptions, Like, Repository } from "typeorm";
@@ -36,6 +37,28 @@ export class UserService {
         return await this._m_User.findOne({ where: { id: id } });
     }
 
+    async user(id: number) {
+
+        const userInfo = await this._m_User
+        .createQueryBuilder('user')
+        .where('user.id = :id', { id })
+        .leftJoinAndSelect('user.roles', 'roles')
+        .leftJoinAndSelect('roles.permissions', 'permissions')
+        .leftJoinAndSelect('user.tokens', 'tokens', 'tokens.ac_token_expires_at > :currentDate OR tokens.rf_token_expires_at > :currentDate', { currentDate: new Date().getTime() })
+        .getOne();
+        let permissions = [];
+
+        for(let role of userInfo.roles){
+            role.permissions.forEach((permission)=>{
+                permissions.push(permission)
+            })
+        }
+        let userObj = {...userInfo, permissions: permissions};
+        delete userObj.roles
+
+        return userObj;
+    }
+
     async findByEmail(email: string): Promise<User | null> {
         return await this._m_User.findOne({ where: { email: email } });
     }
@@ -49,7 +72,6 @@ export class UserService {
     }
 
     async create(user: Partial<User>): Promise<User> {
-        user.password = await hashPassword(user.password);
         const newUser = this._m_User.create(user);
         return await this._m_User.save(newUser);
     }

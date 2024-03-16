@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Role } from './role.model';
+import { Token } from './token.model';
 
 @Entity()
 @Unique(['email'])
@@ -15,10 +16,28 @@ export class User {
 
   @Column()
   password: string;
+
+  
+  @Column()
+  is_superadmin: boolean
   
   @Column()
   is_active: boolean
 
-  @ManyToMany(() => Role, role => role.users)
+  @ManyToMany((type) => Role, role => role.users)
+  @JoinTable({
+    name: 'user_role',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'role_id',
+      referencedColumnName: 'id',
+    },
+  })
   roles: Role[];
+
+  @OneToMany(type => Token, token => token.user)
+  tokens: Token[];
 }
