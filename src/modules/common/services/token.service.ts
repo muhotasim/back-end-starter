@@ -15,7 +15,9 @@ export class TokenService {
     }
 
     activeUserTokens(user: User): Promise<Token[]> {
-        return this._m_Token.find({ where: {  rf_token_expires_at: MoreThan(new Date().getTime()), user: user } })
+        let tempUser = new User()
+        tempUser.id = user.id;
+        return this._m_Token.find({ where: {  rf_token_expires_at: MoreThan(new Date().getTime()), user: tempUser } })
     }
 
     async create(token: Partial<Token>): Promise<Token> {

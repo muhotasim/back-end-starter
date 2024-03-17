@@ -77,9 +77,9 @@ export class AuthController {
  
     }
 
-    @UseGuards(AuthorizationGuard)
     @Post('logout')
     @ApiBearerAuth()
+    @UseGuards(AuthorizationGuard)
     async logout(@Body('access_token') access_token: string, @User() user) {
         const tokens = await this._tokenService.activeUserTokens(user);
         const currentToken = tokens.find((token) => token.access_token == access_token);
