@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Token } from "src/models/token.model";
 import { User } from "src/models/user.model";
-import { LessThan, Repository } from "typeorm";
+import { LessThan, MoreThan, Repository } from "typeorm";
 
 @Injectable()
 export class TokenService {
@@ -15,11 +15,7 @@ export class TokenService {
     }
 
     activeUserTokens(user: User): Promise<Token[]> {
-        [
-            { ac_token_expires_at: LessThan(new Date().getTime()) },
-            { rf_token_expires_at: LessThan(new Date().getTime()) }
-        ]
-        return this._m_Token.find({ where: { ac_token_expires_at: LessThan(new Date().getTime()), rf_token_expires_at: LessThan(new Date().getTime()), user: user } })
+        return this._m_Token.find({ where: {  rf_token_expires_at: MoreThan(new Date().getTime()), user: user } })
     }
 
     async create(token: Partial<Token>): Promise<Token> {

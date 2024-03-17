@@ -33,12 +33,13 @@ export class PermissionController {
 
     @Patch('/:id')
     @Get()
-    @UseGuards(new PermissionGuard(['can-get-single-permission']))
+    @UseGuards(new PermissionGuard(['can-update-permission']))
     async update(@Param('id') id: number, @Body() updatePermissionDTO: UpdatePermissionDTO) {
         return await this._permissionService.update(id, updatePermissionDTO);
     }
 
     @Get('/:id')
+    @UseGuards(new PermissionGuard(['can-get-single-permission']))
     async getById(@Param('id') id: number) {
         return this._permissionService.findById(id);
     }

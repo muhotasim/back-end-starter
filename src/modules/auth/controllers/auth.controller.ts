@@ -46,29 +46,38 @@ export class AuthController {
     }
 
     @Post('refresh-token')
-    @ApiBearerAuth()
-    async refreshToken(@Body('refresh_token') refresh_token: string, @User() user) {
+    async refreshToken(@Body('refresh_token') refresh_token: string) {
+        const result = await this._jwtService.verify(refresh_token, { secret: process.env.JWT_REFRESH_TOKEN_SECRET })
+        const data = decodePayload(result.payload);
+        const userId = data.uId;
+        const user = await this._userService.findById(userId);
         const tokens = await this._tokenService.activeUserTokens(user);
         const currentToken = tokens.find((token) => token.refresh_token == refresh_token);
-        const tokenId = currentToken.id;
-        let currentTime = new Date().getTime();
-        let payload = { payload: encodePayload({ uId: user.id }) }
-        const acTokenExpiryAt = (parseInt(process.env.JWT_ACCESS_TOKEN_EXPIRY) * 1000);
-        const rfTokenExpiryAt = (parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRY) * 1000);
-        const accessToken = await this._jwtService.signAsync(payload, { secret: process.env.JWT_ACCESS_TOKEN_SECRET, expiresIn: acTokenExpiryAt });
-        const refreshToken = await this._jwtService.signAsync(payload, { secret: process.env.JWT_REFRESH_TOKEN_SECRET, expiresIn: rfTokenExpiryAt });
-
-        const savedToken = await this._tokenService.create({
-            ac_token_expires_at: currentTime + acTokenExpiryAt,
-            access_token: accessToken,
-            rf_token_expires_at: currentTime + rfTokenExpiryAt,
-            refresh_token: refreshToken,
-            user: user
-        });
-        await this._tokenService.update(tokenId, { ac_token_expires_at: new Date().getTime(), rf_token_expires_at: new Date().getTime() })
-        return await this._tokenService.findById(savedToken.id);
+        if(currentToken){
+            const tokenId = currentToken.id;
+            let currentTime = new Date().getTime();
+            let payload = { payload: encodePayload({ uId: user.id }) }
+            const acTokenExpiryAt = (parseInt(process.env.JWT_ACCESS_TOKEN_EXPIRY) * 1000);
+            const rfTokenExpiryAt = (parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRY) * 1000);
+            const accessToken = await this._jwtService.signAsync(payload, { secret: process.env.JWT_ACCESS_TOKEN_SECRET, expiresIn: acTokenExpiryAt });
+            const refreshToken = await this._jwtService.signAsync(payload, { secret: process.env.JWT_REFRESH_TOKEN_SECRET, expiresIn: rfTokenExpiryAt });
+    
+            const savedToken = await this._tokenService.create({
+                ac_token_expires_at: currentTime + acTokenExpiryAt,
+                access_token: accessToken,
+                rf_token_expires_at: currentTime + rfTokenExpiryAt,
+                refresh_token: refreshToken,
+                user: user
+            });
+            await this._tokenService.update(tokenId, { ac_token_expires_at: new Date().getTime(), rf_token_expires_at: new Date().getTime() })
+            return await this._tokenService.findById(savedToken.id);
+        }else{
+            throw new NotAcceptableException()
+        }
+ 
     }
 
+    @UseGuards(AuthorizationGuard)
     @Post('logout')
     @ApiBearerAuth()
     async logout(@Body('access_token') access_token: string, @User() user) {
