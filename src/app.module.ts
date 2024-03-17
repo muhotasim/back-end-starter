@@ -10,7 +10,9 @@ import { CommonModule } from './modules/common/common.module';
     AuthModule,
     CommonModule
   ],
-  providers: []
+  providers: [
+    
+  ]
 })
 
 export class AppModule { }

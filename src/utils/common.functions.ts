@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { ResponseType } from './custome.datatypes';
 
 const saltOrRounds = 10;
 
@@ -34,3 +35,36 @@ export const User = createParamDecorator(
         return request.user;
     },
 );
+
+export const errorResponse = (e:Error)=>{
+    return {
+        type: ResponseType.error,
+        data: {},
+        message: e.message,
+        validation: []
+    }
+} 
+export const successResponse = (data, message)=>{
+    return {
+        type: ResponseType.success,
+        data: data,
+        message: message,
+        validation: []
+    }
+}
+export const unauthorizeResponse = (data, message)=>{
+    return {
+        type: ResponseType.unauthorize,
+        data: data,
+        message: message,
+        validation: []
+    }
+}
+export const validationResponse = (data, message)=>{
+    return {
+        type: ResponseType.validate,
+        data: data,
+        message: message,
+        validation: []
+    }
+}
