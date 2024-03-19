@@ -1,8 +1,8 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
 import { Role } from "./role.model";
 @Entity()
 @Unique(['name', 'permission_key'])
-export class Permission{
+export class Permission {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -13,7 +13,7 @@ export class Permission{
     permission_key: string
 
     @Column()
-    is_active: boolean    
+    is_active: boolean
     @ManyToMany(() => Role, role => role.permissions)
     @JoinTable({
         name: 'role_permission',
@@ -27,4 +27,10 @@ export class Permission{
         }
     })
     roles: Role[];
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 }

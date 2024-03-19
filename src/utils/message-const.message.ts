@@ -22,6 +22,14 @@ const messagesConst = {
                 getById: "Permission has been fetched successfully",
                 destroy: "Permission has been deleted successfully"
             },
+            notification: {
+                index: "Notification has been fetched successfully.",
+                all: "Notification has been fetched successfully.",
+                create: "Notification has been created successfully.",
+                update: "Notification has been updated successfully",
+                getById: "Notification has been fetched successfully",
+                destroy: "Notification has been deleted successfully"
+            },
             role: {
                 index: "Role has been fetched successfully.",
                 all: "Role has been fetched successfully.",

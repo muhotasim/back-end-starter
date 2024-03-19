@@ -7,8 +7,9 @@ import { User, checkPassword, decodePayload, encodePayload, errorResponse, hashP
 import { TokenService } from "src/modules/common/services/token.service";
 import { AuthorizationGuard } from "src/guards/authorization.guard";
 import { QueueService } from "src/modules/common/services/queue.service";
-import { JobTypes, ResponseType } from "src/utils/custome.datatypes";
+import { JobTypes, NotificationType, ResponseType } from "src/utils/custome.datatypes";
 import messagesConst from "src/utils/message-const.message";
+import { NotificationService } from "src/modules/common/services/notification.service";
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -16,7 +17,8 @@ export class AuthController {
         private readonly _userService: UserService,
         private readonly _tokenService: TokenService,
         private readonly _jwtService: JwtService,
-        private readonly _queueService: QueueService
+        private readonly _queueService: QueueService,
+        private readonly _notificationService: NotificationService
     ) { }
 
     @Post('token')
@@ -166,12 +168,14 @@ export class AuthController {
     @UseGuards(AuthorizationGuard)
     @Get('user')
     @ApiBearerAuth()
-    user(@User() user) {
+    async user(@User() user) {
         if (user) {
             delete user.password;
             delete user.tokens;
             delete user.roles;
         }
+        const notifications = await this._notificationService.userNotifications(user.id, 10, NotificationType.app)
+        user.notifications = notifications;
         return successResponse(user, messagesConst['en'].userFound)
     }
 

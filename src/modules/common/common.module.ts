@@ -19,6 +19,9 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { MailService } from "./services/mail.service";
 import { QueueService } from "./services/queue.service";
 import { EventEmitterModule } from "@nestjs/event-emitter";
+import { NotificationController } from "./controllers/notification.controller";
+import { NotificationService } from "./services/notification.service";
+import { Notification } from "src/models/notification.model";
 
 
 @Module({
@@ -46,12 +49,12 @@ import { EventEmitterModule } from "@nestjs/event-emitter";
                 },
             },
         }),
-        TypeOrmModule.forFeature([User, Role, Permission, Token]),
+        TypeOrmModule.forFeature([User, Role, Permission, Token, Notification]),
         ScheduleModule.forRoot(),
         JwtModule
     ],
-    controllers: [UserController, RoleController, PermissionController],
-    providers: [UserService, RoleService, PermissionService, TokenService, ScheduleCleanUpService, MailService, QueueService],
-    exports: [UserService, RoleService, PermissionService, TokenService, MailService, QueueService]
+    controllers: [UserController, RoleController, PermissionController, NotificationController],
+    providers: [UserService, RoleService, PermissionService, TokenService, ScheduleCleanUpService, MailService, QueueService, NotificationService],
+    exports: [UserService, RoleService, PermissionService, TokenService, MailService, QueueService, NotificationService]
 })
 export class CommonModule { }

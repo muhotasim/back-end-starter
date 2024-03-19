@@ -4,6 +4,7 @@ import { Menu } from "src/models/menu.model";
 import { Permission } from "src/models/permissions.model";
 import { Role } from "src/models/role.model";
 import { User } from "src/models/user.model";
+import { Notification } from "src/models/notification.model";
 
 export const getDatabaseConfig = ():TypeOrmModuleOptions =>{
     return {
@@ -13,7 +14,7 @@ export const getDatabaseConfig = ():TypeOrmModuleOptions =>{
         username: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: process.env.DB_DATABASE,
-        entities: [ User, Role,  Permission, Token, Menu ],
+        entities: [ User, Role,  Permission, Token, Menu, Notification ],
         synchronize: true,
     }
 }

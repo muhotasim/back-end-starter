@@ -1,30 +1,30 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./user.model";
 
 @Entity()
-export class Token{
-    @PrimaryGeneratedColumn({type: 'bigint'})
+export class Token {
+    @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number;
 
-    @Column({type:'text'})
+    @Column({ type: 'text' })
     access_token: string;
 
-    @Column({type:'text'})
+    @Column({ type: 'text' })
     refresh_token: string;
 
     @ManyToOne(type => User, user => user.tokens)
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @Column({type:'bigint'})
+    @Column({ type: 'bigint' })
     ac_token_expires_at: number;
 
-    @Column({type:'bigint'})
+    @Column({ type: 'bigint' })
     rf_token_expires_at: number;
-    
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    issued_at: Date;
 
+    @CreateDateColumn()
+    created_at: Date;
 
-    
+    @UpdateDateColumn()
+    updated_at: Date;
 }

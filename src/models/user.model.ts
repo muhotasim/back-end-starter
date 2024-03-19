@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, ManyToMany, JoinTable, OneToMany, CreateDateColumn, UpdateDateColumn, BeforeUpdate } from 'typeorm';
 import { Role } from './role.model';
 import { Token } from './token.model';
+import { Notification } from './notification.model';
 
 @Entity()
 @Unique(['email'])
@@ -45,4 +46,14 @@ export class User {
 
   @OneToMany(type => Token, token => token.user)
   tokens: Token[];
+
+  @OneToMany(()=>Notification, notification=>notification.user)
+  notifications: Notification[]
+
+  @CreateDateColumn()
+  created_at: Date;
+  
+  @UpdateDateColumn()
+  updated_at: Date;
+
 }

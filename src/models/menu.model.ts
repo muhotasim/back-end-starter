@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 @Entity()
 export class Menu{
     @PrimaryGeneratedColumn()
@@ -6,6 +6,9 @@ export class Menu{
 
     @Column()
     label: string
+
+    @Column({default: 1})
+    order:number
 
     @Column()
     link: string
@@ -22,4 +25,11 @@ export class Menu{
 
     @OneToMany(type => Menu, menu => menu.parent)
     childrens: Menu[];
+
+
+    @CreateDateColumn()
+    created_at: Date;
+    
+    @UpdateDateColumn()
+    updated_at: Date;
 }

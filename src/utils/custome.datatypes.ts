@@ -10,3 +10,17 @@ export interface ResponseInterface{
     data: {[key:string]: any},
     validation: any[]
 }
+
+export enum NotificationStatus {
+    read = 'read',
+    unread = 'unread',
+    dismissed = 'dismissed'
+}
+
+export enum NotificationType {
+    email = 'email',
+    sms = 'sms',
+    app = 'app'
+}
+
+export interface NotificationInterface<User>{ type: NotificationType, status: NotificationStatus, message: string, link: string, user:User  }
