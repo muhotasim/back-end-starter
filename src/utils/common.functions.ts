@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { ResponseType } from './custome.datatypes';
+import { Equal, LessThan, Like, MoreThan } from 'typeorm';
 
 const saltOrRounds = 10;
 
@@ -67,5 +68,25 @@ export const validationResponse = (data, message)=>{
         data: data,
         message: message,
         validation: []
+    }
+}
+
+export const filterConditions = {
+    'like': Like,
+    '=': Equal,
+    '>': LessThan,
+    '<': MoreThan,
+}
+
+export const conditionWapper = (condition, value)=>{
+    if(filterConditions[condition]){
+        if(condition=='like'){
+
+            return filterConditions[condition](`%${value}%`)
+        }else{
+            return filterConditions[condition](`${value}`)
+        }
+    }else{
+        return value;
     }
 }

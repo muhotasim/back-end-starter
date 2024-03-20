@@ -13,10 +13,12 @@ import { GlobalService } from "src/modules/common/services/global.service";
 export class NotificationController {
     constructor(private readonly _notificationService: NotificationService, private readonly globalService: GlobalService) { }
     @Get()
-    async index(@User() userInfo, @Query() query = {}, @Query('page') page: number, @Query('perPage') perPage: number) {
+    async index(@User() userInfo, @Query() query:any = {}, @Query('page') page: number, @Query('perPage') perPage: number) {
         try {
             const gridData = this.globalService.getGlobalData('notifications');
-            const data = await this._notificationService.findAndCount(page, perPage, {...query, user_id: userInfo.id})
+            delete query.page;
+            delete query.perPage;
+            const data = await this._notificationService.findAndCount(page, perPage,gridData, {...query, user_id: userInfo.id})
             return successResponse(data, messagesConst['en'].controller.notification.index, gridData);
         } catch (e) {
             return errorResponse(e);

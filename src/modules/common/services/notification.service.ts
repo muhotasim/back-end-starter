@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FilterGrid } from 'src/models/grid.model';
 import { Notification } from 'src/models/notification.model';
 import { User } from 'src/models/user.model';
+import { conditionWapper } from 'src/utils/common.functions';
 import { NotificationInterface, NotificationStatus, NotificationType } from 'src/utils/custome.datatypes';
 import { FindManyOptions, Repository } from 'typeorm';
 
@@ -17,15 +19,31 @@ export class NotificationService {
         return notifications
     }
 
-    async findAndCount(page: number = 1, perPage: number = 10, filterParams: { search?: string, user_id: number }): Promise<{ data: Notification[], total: number }> {
+    async findAndCount(page: number = 1, perPage: number = 10,grid: FilterGrid[], filterParams: { search?: string, user_id: number }): Promise<{ data: Notification[], total: number }> {
         const options: FindManyOptions<Notification> = {
             take: perPage,
             skip: perPage * (page - 1),
         };
-        if (filterParams && filterParams.search ) {
-            options.where = [
-
-            ];
+        if (filterParams ) {
+            options.where = {};
+            
+            if(filterParams.user_id){
+                let user = new User()
+                user.id = Number(filterParams.user_id)
+                delete filterParams.user_id;
+                options.where['user'] =  user;
+            }
+            for(let key of Object.keys(filterParams)){
+                let gridData = grid.find(g=>g.effect_on==key);
+                if(filterParams[key]){
+                    if(gridData){
+                        options.where[key]=conditionWapper(gridData.condition,filterParams[key])
+                    }else{
+                        options.where[key]=filterParams[key];
+                    }
+                }
+                
+            }
         }
         const [data, total] = await this._notification
             .findAndCount(options);
