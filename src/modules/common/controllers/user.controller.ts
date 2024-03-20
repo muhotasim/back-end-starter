@@ -6,19 +6,21 @@ import { errorResponse, hashPassword, successResponse } from "src/utils/common.f
 import { AuthorizationGuard } from "src/guards/authorization.guard";
 import { PermissionGuard } from "src/guards/permission.guard";
 import messagesConst from "src/utils/message-const.message";
+import { GlobalService } from "../services/global.service";
 
 @ApiTags('Users')
 @UseGuards(AuthorizationGuard)
 @Controller('users')
 @ApiBearerAuth()
 export class UserController {
-    constructor(private readonly _userService: UserService) { }
+    constructor(private readonly _userService: UserService, private readonly globalService: GlobalService) { }
     @Get()
     @UseGuards(new PermissionGuard(['can-get-users-with-count']))
     async index(@Query() query, @Query('page') page: number, @Query('perPage') perPage: number) {
         try {
+            const gridData = this.globalService.getGlobalData('users');
             const data = await this._userService.findAndCount(page, perPage, query);
-            return successResponse(data, messagesConst['en'].controller.users.index)
+            return successResponse(data, messagesConst['en'].controller.users.index, gridData)
         } catch (e) {
             return errorResponse(e);
         }

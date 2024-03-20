@@ -44,12 +44,13 @@ export const errorResponse = (e:Error)=>{
         validation: []
     }
 } 
-export const successResponse = (data, message)=>{
+export const successResponse = (data, message, gridData = [])=>{
     return {
         type: ResponseType.success,
         data: data,
         message: message,
-        validation: []
+        validation: [],
+        grid: gridData
     }
 }
 export const unauthorizeResponse = (data, message)=>{

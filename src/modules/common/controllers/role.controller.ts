@@ -6,19 +6,21 @@ import { AuthorizationGuard } from "src/guards/authorization.guard";
 import { PermissionGuard } from "src/guards/permission.guard";
 import { errorResponse, successResponse } from "src/utils/common.functions";
 import messagesConst from "src/utils/message-const.message";
+import { GlobalService } from "../services/global.service";
 
 @ApiTags('Roles')
 @UseGuards(AuthorizationGuard)
 @Controller('roles')
 @ApiBearerAuth()
 export class RoleController {
-    constructor(private readonly _roleService: RoleService) { }
+    constructor(private readonly _roleService: RoleService, private readonly globalService: GlobalService) { }
     @Get()
     @UseGuards(new PermissionGuard(['can-get-roles-with-count']))
     async index(@Query() query, @Query('page') page: number, @Query('perPage') perPage: number) {
         try {
+            const gridData = this.globalService.getGlobalData('roles');
             const data = await this._roleService.findAndCount(page, perPage, query);
-            return successResponse(data, messagesConst['en'].controller.role.index);
+            return successResponse(data, messagesConst['en'].controller.role.index, gridData);
         } catch (e) {
             return errorResponse(e);
         }

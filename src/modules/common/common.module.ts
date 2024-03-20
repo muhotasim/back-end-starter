@@ -22,6 +22,8 @@ import { EventEmitterModule } from "@nestjs/event-emitter";
 import { NotificationController } from "./controllers/notification.controller";
 import { NotificationService } from "./services/notification.service";
 import { Notification } from "src/models/notification.model";
+import { FilterGrid } from "src/models/grid.model";
+import { GlobalService } from "./services/global.service";
 
 
 @Module({
@@ -49,12 +51,12 @@ import { Notification } from "src/models/notification.model";
                 },
             },
         }),
-        TypeOrmModule.forFeature([User, Role, Permission, Token, Notification]),
+        TypeOrmModule.forFeature([User, Role, Permission, Token, Notification, FilterGrid]),
         ScheduleModule.forRoot(),
         JwtModule
     ],
     controllers: [UserController, RoleController, PermissionController, NotificationController],
-    providers: [UserService, RoleService, PermissionService, TokenService, ScheduleCleanUpService, MailService, QueueService, NotificationService],
-    exports: [UserService, RoleService, PermissionService, TokenService, MailService, QueueService, NotificationService]
+    providers: [UserService, RoleService, PermissionService, TokenService, ScheduleCleanUpService, MailService, QueueService, NotificationService, GlobalService],
+    exports: [UserService, RoleService, PermissionService, TokenService, MailService, QueueService, NotificationService, GlobalService]
 })
 export class CommonModule { }

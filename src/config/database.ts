@@ -5,6 +5,7 @@ import { Permission } from "src/models/permissions.model";
 import { Role } from "src/models/role.model";
 import { User } from "src/models/user.model";
 import { Notification } from "src/models/notification.model";
+import { FilterGrid } from "src/models/grid.model";
 
 export const getDatabaseConfig = ():TypeOrmModuleOptions =>{
     return {
@@ -14,7 +15,7 @@ export const getDatabaseConfig = ():TypeOrmModuleOptions =>{
         username: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: process.env.DB_DATABASE,
-        entities: [ User, Role,  Permission, Token, Menu, Notification ],
+        entities: [ User, Role,  Permission, Token, Menu, Notification, FilterGrid ],
         synchronize: true,
     }
 }

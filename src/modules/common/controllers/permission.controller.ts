@@ -7,19 +7,21 @@ import { PermissionGuard } from "src/guards/permission.guard";
 import { ResponseType } from "src/utils/custome.datatypes";
 import { errorResponse, successResponse } from "src/utils/common.functions";
 import messagesConst from "src/utils/message-const.message";
+import { GlobalService } from "../services/global.service";
 @ApiTags('Permission')
 @UseGuards(AuthorizationGuard)
 @Controller('permission')
 @ApiBearerAuth()
 export class PermissionController {
-    constructor(private readonly _permissionService: PermissionService) { }
+    constructor(private readonly _permissionService: PermissionService, private readonly globalService: GlobalService) { }
 
     @Get()
     @UseGuards(new PermissionGuard(['can-get-permission-with-count']))
     async index(@Query() query, @Query('page') page: number, @Query('perPage') perPage: number) {
         try {
+            const gridData = this.globalService.getGlobalData('permission');
             const data = await this._permissionService.findAndCount(page, perPage, query)
-            return successResponse(data, messagesConst['en'].controller.permission.index);
+            return successResponse(data, messagesConst['en'].controller.permission.index, gridData);
         } catch (e) {
             return errorResponse(e);
         }

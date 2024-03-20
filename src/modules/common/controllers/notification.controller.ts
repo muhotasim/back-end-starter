@@ -5,17 +5,19 @@ import { User, errorResponse, successResponse } from "src/utils/common.functions
 import messagesConst from "src/utils/message-const.message";
 import { NotificationService } from "../services/notification.service";
 import { NotificationStatus } from "src/utils/custome.datatypes";
+import { GlobalService } from "src/modules/common/services/global.service";
 @ApiTags('Notification')
 @UseGuards(AuthorizationGuard)
 @Controller('notifications')
 @ApiBearerAuth()
 export class NotificationController {
-    constructor(private readonly _notificationService: NotificationService) { }
+    constructor(private readonly _notificationService: NotificationService, private readonly globalService: GlobalService) { }
     @Get()
     async index(@User() userInfo, @Query() query = {}, @Query('page') page: number, @Query('perPage') perPage: number) {
         try {
+            const gridData = this.globalService.getGlobalData('notifications');
             const data = await this._notificationService.findAndCount(page, perPage, {...query, user_id: userInfo.id})
-            return successResponse(data, messagesConst['en'].controller.notification.index);
+            return successResponse(data, messagesConst['en'].controller.notification.index, gridData);
         } catch (e) {
             return errorResponse(e);
         }

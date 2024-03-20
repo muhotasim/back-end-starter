@@ -24,3 +24,9 @@ export enum NotificationType {
 }
 
 export interface NotificationInterface<User>{ type: NotificationType, status: NotificationStatus, message: string, link: string, user:User  }
+
+export enum GridTypes{
+    number = 'number',
+    string = 'string',
+    date = 'date'
+}
