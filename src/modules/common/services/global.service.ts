@@ -11,7 +11,7 @@ export class GlobalService {
     }
 
     async getGrid() {
-        return await this._m_FilterGrid.find({ where: { is_active: true } })
+        return await this._m_FilterGrid.find({ where: { is_active: true }, order: {order: 'asc'} })
     }
     setGlobalData(data: any) {
         this.globalData = data;

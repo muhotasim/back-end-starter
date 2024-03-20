@@ -6,6 +6,15 @@ export class FilterGrid{
     id: number;
 
     @Column()
+    placeholder: string;
+
+    @Column()
+    label: string;
+
+    @Column()
+    order:number;
+    
+    @Column()
     for_route: string
 
     @Column()
