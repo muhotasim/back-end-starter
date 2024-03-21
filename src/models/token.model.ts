@@ -12,7 +12,7 @@ export class Token {
     @Column({ type: 'text' })
     refresh_token: string;
 
-    @ManyToOne(type => User, user => user.tokens)
+    @ManyToOne(type => User, user => user.tokens,{onDelete: 'CASCADE'})
     @JoinColumn({ name: 'user_id' })
     user: User;
 

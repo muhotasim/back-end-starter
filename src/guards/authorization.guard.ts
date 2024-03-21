@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { UserService } from 'src/modules/common/services/user.service';
@@ -18,14 +18,14 @@ export class AuthorizationGuard implements CanActivate {
     const response: Response = context.switchToHttp().getResponse();
     const authHeader = request.headers['authorization'];
     if (!authHeader) {
-      response.status(401).json(unauthorizeResponse({}, messagesConst['en'].unauthorize))
+      response.json(unauthorizeResponse({}, messagesConst['en'].unauthorize))
       return false;
 
     }
     const [bearer, token] = authHeader.split(' ');
 
     if (bearer !== 'Bearer' || !token) {
-      response.status(401).json(unauthorizeResponse({}, messagesConst['en'].unauthorize))
+      response.json(unauthorizeResponse({}, messagesConst['en'].unauthorize))
       return false;
     }
 
@@ -36,7 +36,7 @@ export class AuthorizationGuard implements CanActivate {
       const user = await this._userService.user(userId)
       const matchToken = user.tokens.find(d => d.access_token == token && d.ac_token_expires_at > new Date().getTime())
       if (!user.is_active || !matchToken) {
-        response.status(401).json(unauthorizeResponse({}, messagesConst['en'].unauthorize))
+        response.json(unauthorizeResponse({}, messagesConst['en'].unauthorize))
         return false;
       }
       request.user = user;
