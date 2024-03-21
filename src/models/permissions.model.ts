@@ -14,7 +14,7 @@ export class Permission {
 
     @Column()
     is_active: boolean
-    @ManyToMany(() => Role, role => role.permissions)
+    @ManyToMany(() => Role, role => role.permissions, {onDelete: 'CASCADE'})
     @JoinTable({
         name: 'role_permission',
         inverseJoinColumn: {

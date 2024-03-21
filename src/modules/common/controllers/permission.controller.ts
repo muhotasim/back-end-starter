@@ -20,7 +20,7 @@ export class PermissionController {
     async index(@Query() query, @Query('page') page: number, @Query('perPage') perPage: number) {
         try {
             const gridData = this.globalService.getGlobalData('permission');
-            const data = await this._permissionService.findAndCount(page, perPage, query)
+            const data = await this._permissionService.findAndCount(page, perPage,gridData, query)
             return successResponse(data, messagesConst['en'].controller.permission.index, gridData);
         } catch (e) {
             return errorResponse(e);

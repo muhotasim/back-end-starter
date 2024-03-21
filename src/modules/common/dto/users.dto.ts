@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class CreateUserDTO {
   @ApiProperty()
   @IsNotEmpty()
@@ -16,6 +16,10 @@ export class CreateUserDTO {
   @IsNotEmpty()
   @IsString()
   password: string;
+
+  @ApiProperty()
+  @IsArray()
+  roles: number[];
 
   @ApiProperty()
   @IsNotEmpty()
@@ -41,6 +45,10 @@ export class UpdateUserDTO extends PartialType(CreateUserDTO){
   @IsString()
   password: string;
 
+  @ApiProperty()
+  @IsArray()
+  roles: number[];
+  
   @ApiProperty()
   @IsOptional()
   @IsBoolean()

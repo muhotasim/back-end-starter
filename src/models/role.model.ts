@@ -29,7 +29,7 @@ export class Role {
   users: User[];
 
 
-  @ManyToMany((type) => Permission, permission => permission.roles)
+  @ManyToMany((type) => Permission, permission => permission.roles, { onDelete: 'CASCADE' })
   @JoinTable({
     name: 'role_permission',
     joinColumn: {

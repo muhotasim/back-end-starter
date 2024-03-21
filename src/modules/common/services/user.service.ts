@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FilterGrid } from "src/models/grid.model";
+import { Role } from "src/models/role.model";
 import { User } from "src/models/user.model";
 import { conditionWapper } from "src/utils/common.functions";
 import { FindManyOptions, Like, Repository } from "typeorm";
@@ -43,7 +44,7 @@ export class UserService {
     }
 
     async findById(id: number): Promise<User | null> {
-        return await this._m_User.findOne({ where: { id: id } });
+        return await this._m_User.findOne({ where: { id: id }, relations: ['roles'] });
     }
 
     async user(id: number) {
@@ -80,17 +81,38 @@ export class UserService {
         return await this._m_User.findOne({ where: { id: id }, relations: ['roles', 'roles.permissions'] });
     }
 
-    async create(user: Partial<User>): Promise<User> {
-        const newUser = this._m_User.create(user);
+    async create(user): Promise<User> {
+        let roles = [...user.roles].map((role_id)=>{
+            const newUserRole = new Role();
+            newUserRole.id = role_id;
+            return newUserRole;
+        });
+        user.roles = roles;
+        const tempUser = new User()
+        for(let key of Object.keys(user)){
+            tempUser[key] = user[key]
+        }
+        const newUser = this._m_User.create(tempUser);
         return await this._m_User.save(newUser);
     }
 
-    async update(id: number, updateUserDto: Partial<User>): Promise<User | false> {
-        const user = await this._m_User.findOne({ where: { id: id } });
+    async update(id: number, updateUserDto): Promise<User | false> {
+        let roles = [...updateUserDto.roles];
+        delete updateUserDto.roles;
+        const user = await this._m_User.findOne({ where: { id: id }, relations: ['roles'] });
         if (!user) {
             return false;
         }
 
+        user.roles = user.roles.filter((role)=>roles.includes(role.id));
+        for(let role of roles){
+            if(user.roles.findIndex(role=>role.id==Number(role))==-1){
+                let newUserRole = new Role();
+                newUserRole.id = role;
+                user.roles.push(newUserRole)
+            }
+        }
+        
         Object.assign(user, updateUserDto);
         return await this._m_User.save(user);
     }
