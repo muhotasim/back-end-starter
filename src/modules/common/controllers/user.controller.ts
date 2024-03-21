@@ -11,7 +11,7 @@ import { GlobalService } from "../services/global.service";
 @ApiTags('Users')
 @UseGuards(AuthorizationGuard)
 @Controller('users')
-@ApiBearerAuth()
+@ApiBearerAuth() 
 export class UserController {
     constructor(private readonly _userService: UserService, private readonly globalService: GlobalService) { }
     @Get()
@@ -19,7 +19,7 @@ export class UserController {
     async index(@Query() query, @Query('page') page: number, @Query('perPage') perPage: number) {
         try {
             const gridData = this.globalService.getGlobalData('users');
-            const data = await this._userService.findAndCount(page, perPage, query);
+            const data = await this._userService.findAndCount(page, perPage,gridData, query);
             return successResponse(data, messagesConst['en'].controller.users.index, gridData)
         } catch (e) {
             return errorResponse(e);

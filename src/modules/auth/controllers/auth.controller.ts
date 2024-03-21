@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotAcceptableException, NotFoundException, Patch, Post, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, NotAcceptableException, NotFoundException, Patch, Post, Query, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
 import { ChangePasswordDTO, ForgotPasswordDTO, LoginDTO, ResetPasswordDTO } from "../dto/auth.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -168,13 +168,13 @@ export class AuthController {
     @UseGuards(AuthorizationGuard)
     @Get('user')
     @ApiBearerAuth()
-    async user(@User() user) {
+    async user(@User() user, @Query('notifications') notificationsNum:number = 10) {
         if (user) {
             delete user.password;
             delete user.tokens;
             delete user.roles;
         }
-        const notifications = await this._notificationService.userNotifications(user.id, 10, NotificationType.app)
+        const notifications = await this._notificationService.userNotifications(user.id, notificationsNum, NotificationType.app)
         user.notifications = notifications;
         return successResponse(user, messagesConst['en'].userFound)
     }

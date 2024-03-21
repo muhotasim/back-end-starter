@@ -1,26 +1,37 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { FilterGrid } from "src/models/grid.model";
 import { User } from "src/models/user.model";
+import { conditionWapper } from "src/utils/common.functions";
 import { FindManyOptions, Like, Repository } from "typeorm";
 
 @Injectable()
 export class UserService {
     constructor(@InjectRepository(User) private readonly _m_User: Repository<User>) { }
 
-    async findAndCount(page: number = 1, perPage: number = 10, filterParams: { search?: string, is_active?: boolean }): Promise<{ data: User[], total: number }> {
+    async findAndCount(page: number = 1, perPage: number = 10, grid: FilterGrid[],filterParams: { [key:string]: any }): Promise<{ data: User[], total: number }> {
         const options: FindManyOptions<User> = {
             take: perPage,
             skip: perPage * (page - 1),
         };
-        if (filterParams && filterParams.search && filterParams.is_active != null) {
-            options.where = [
-
-            ];
-            options.where.push({ email: Like(`%${filterParams.search}%`) })
-            options.where.push({ name: Like(`%${filterParams.search}%`) })
+        delete filterParams.perPage
+        delete filterParams.page
+        if ( Object.keys(filterParams).length) {
+            options.where = {};
+            for(let key of Object.keys(filterParams)){
+                let gridData = grid.find(g=>g.effect_on==key);
+                if(filterParams[key]){
+                    if(gridData){
+                        options.where[key]=conditionWapper(gridData.condition,filterParams[key])
+                    }else{
+                        options.where[key]=filterParams[key];
+                    }
+                }
+                
+            }
 
             if (filterParams.is_active != null) {
-                options.where.push({ is_active: filterParams.is_active });
+                options.where.is_active= filterParams.is_active;
             }
         }
         const [data, total] = await this._m_User.findAndCount(options);
