@@ -97,6 +97,6 @@ export class UserService {
 
     async destroy(id: number) {
         const user: User = await this._m_User.findOne({ where: { id: id } });
-        return await this._m_User.delete(user)
+        return await this._m_User.remove(user)
     }
 }
