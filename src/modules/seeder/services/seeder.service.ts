@@ -55,6 +55,8 @@ export class SeederService implements Seeder {
       { name: 'Can Update User', permission_key: '', is_active: true },
       { name: 'Can Get Single User', permission_key: '', is_active: true },
       { name: 'Can Delete User', permission_key: '', is_active: true },
+      { name: 'Can Control Access', permission_key: '', is_active: true },
+      { name: 'Can See Dashboard', permission_key: '', is_active: true },
     ].map(d => {
       d.permission_key = slugify(d.name.toLowerCase(), { lower: true, trim: true })
       return d;
