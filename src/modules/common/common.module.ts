@@ -25,7 +25,6 @@ import { Notification } from "src/models/notification.model";
 import { FilterGrid } from "src/models/grid.model";
 import { GlobalService } from "./services/global.service";
 
-
 @Module({
     imports: [
         EventEmitterModule.forRoot(),
