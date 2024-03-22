@@ -14,6 +14,7 @@ export class UserService {
         const options: FindManyOptions<User> = {
             take: perPage,
             skip: perPage * (page - 1),
+            relations: ['roles']
         };
         delete filterParams.perPage
         delete filterParams.page
