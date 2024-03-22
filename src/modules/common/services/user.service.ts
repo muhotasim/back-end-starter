@@ -55,12 +55,18 @@ export class UserService {
             .leftJoinAndSelect('user.roles', 'roles')
             .leftJoinAndSelect('roles.permissions', 'permissions')
             .leftJoinAndSelect('user.tokens', 'tokens', 'tokens.ac_token_expires_at > :currentDate OR tokens.rf_token_expires_at > :currentDate', { currentDate: new Date().getTime() })
+            .select([
+                'user',
+                'roles',
+                'tokens',
+                'permissions.permission_key'
+            ])
             .getOne();
         let permissions = [];
 
         for (let role of userInfo.roles) {
-            role.permissions.forEach((permission) => {
-                permissions.push(permission)
+            role.permissions.forEach((permission_key) => {
+                permissions.push(permission_key)
             })
         }
         let userObj = { ...userInfo, permissions: permissions };
